@@ -39,7 +39,7 @@ contract EventTicketsV2 {
     */
     mapping(uint => Event) events;
 
-   // event LogEventAdded(string desc, string url, uint ticketsAvailable, uint eventId);
+    event LogEventAdded(string desc, string url, uint ticketsAvailable, uint eventId);
     event LogBuyTickets(address buyer, uint eventId, uint numTickets);
     event LogGetRefund(address accountRefunded, uint eventId, uint numTickets);
     event LogEndSale(address owner, uint balance, uint eventId);
@@ -84,7 +84,7 @@ contract EventTicketsV2 {
                                      isOpen: true });
 
         
-        //emit LogEventAdded(_description,_website,_totalTicket,eventId);
+        emit LogEventAdded(_description,_website,_totalTicket,eventId);
         return (eventId);
     }
 
@@ -204,9 +204,10 @@ contract EventTicketsV2 {
 
     function endSale(uint _eventId) OnlyOwner public {
         Event storage ent = events[_eventId];
+        uint balance = address(this).balance;
 
         ent.isOpen = false;    
-        owner.transfer(address(this).balance);
-        emit LogEndSale(owner,address(this).balance,_eventId);
+        owner.transfer(balance);
+        emit LogEndSale(owner,balance,_eventId);
     }
 }
